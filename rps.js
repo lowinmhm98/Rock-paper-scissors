@@ -1,3 +1,8 @@
+let rounds=0;
+let victory=0;
+let lost=0;
+let tie =0;
+
 function computerPlay () 
 {
      let randomchoice = Math.floor(Math.random()*3);
@@ -77,25 +82,63 @@ function singleRound(computerSelection , playerSelection)
 }
 
 
-function game() 
+function game(chosenButton) 
 {
-    let victory =0;
-    for (let i = 0; i < 5; i++) 
+    while (results.querySelector('p')!== null) 
     {
-      let resultround=  singleRound(computerPlay() , playerSelection(prompt("Insert your choice")));
-      console.log(resultround);
-      if (resultround.includes("won"))
-      {
-          victory++;
-      }
-        
+        results.removeChild(results.querySelector('p'))
+    }   
+    rounds++;
+    const resultround= document.createElement('p')
+    resultround.textContent= singleRound(computerPlay(),playerSelection(chosenButton.textContent))
+    results.appendChild(resultround);
+    if (resultround.textContent.includes("won"))
+    {
+        victory++;
+    } else if (resultround.textContent.includes("lost"))
+    {
+        lost++;
+    } else 
+    {
+        tie++;
     }
-     if (victory>=2)
-     {
-         console.log("You won the game,congratularions")
-         return
-     } else 
-     {
-         console.log("You lost the game");   
-     }
+        
+    if (rounds=== 5)
+    {
+        rounds=0;
+    if (victory>lost)
+    {
+        const resultgame= document.createElement('p')
+        resultgame.textContent= "You won the game,congratulations!  You won " + victory + " rounds over 5 rounds"
+        results.appendChild(resultgame);
+        victory=0;
+        lost=0;
+        tie=0;
+        return
+    } else  if (victory<lost)
+    {
+        const resultgame= document.createElement('p')
+        resultgame.textContent= "You lost the game: You lost " + (lost)+ " rounds over 5 rounds"
+        results.appendChild(resultgame);
+        victory=0;
+        lost=0;
+        tie=0;
+        return
+        
+    } else {
+        const resultgame= document.createElement('p')
+        resultgame.textContent= "You tied the game!"
+        results.appendChild(resultgame);
+        victory=0;
+        lost=0;
+        tie=0;
+        return
+    }
+    }
 }
+
+
+const buttons= document.querySelectorAll('button')
+const results = document.querySelector('.results')
+
+buttons.forEach(element => {element.addEventListener('click',() => { game(element)})});
